@@ -1,31 +1,31 @@
-import { useQuery, gql } from '@apollo/client';
+import { useQuery } from '@apollo/client';
+import { gql } from '../src/__generated__/gql';
 
-const GET_LOCATIONS = gql`
-  query GetLocations {
-    locations {
-      id
-      name
-      description
-      photo
+const GET_BOOKS = gql(`
+  query AllBooksQuery {
+    books {
+      id,
+      title,
+      characters,
     }
   }
-`;
+
+`);
+
 
 
 function App() {
-  const { loading, error, data } = useQuery(GET_LOCATIONS);
+  const { loading, error, data } = useQuery(GET_BOOKS);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error : {error.message}</p>;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return data.locations.map(({ id, name, description, photo }: any) => (
-    <div key={id}>
-      <h3>{name}</h3>
-      <img width="400" height="250" alt="location-reference" src={`${photo}`} />
+  return data && data.books?.map(book => (
+    <div key={book.id}>
+      <h3>{book.title}</h3>
       <br />
       <b>About this location:</b>
-      <p>{description}</p>
+      <p>{book.characters.join(', ')}</p>
       <br />
     </div>
   ));
