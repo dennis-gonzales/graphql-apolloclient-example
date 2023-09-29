@@ -1,34 +1,19 @@
-import { useQuery } from '@apollo/client';
-import { gql } from '../src/__generated__/gql';
-
-const GET_BOOKS = gql(`
-  query AllBooksQuery {
-    books {
-      id,
-      title,
-      characters,
-    }
-  }
-
-`);
-
-
+import { Suspense } from 'react';
+import Books from './components/Books';
+import Book from './components/Book';
 
 function App() {
-  const { loading, error, data } = useQuery(GET_BOOKS);
+  return (
+    <>
+      <Suspense fallback={<div>Loading books...</div>}>
+        <Books />
+      </Suspense>
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error : {error.message}</p>;
-
-  return data && data.books?.map(book => (
-    <div key={book.id}>
-      <h3>{book.title}</h3>
-      <br />
-      <b>About this location:</b>
-      <p>{book.characters.join(', ')}</p>
-      <br />
-    </div>
-  ));
+      <Suspense fallback={<div>Loading book details...</div>}>
+        <Book />
+      </Suspense>
+    </>
+  );
 }
 
-export default App
+export default App;
